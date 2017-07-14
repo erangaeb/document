@@ -61,4 +61,11 @@ class RestRequestHandlerActor(requestContext: RequestContext) extends Actor with
     DocumentResponse(meta, List(doc1, doc2))
   }
 
+  def post() = {
+
+  }
+
+  def put() = {
+
+  }
 }

@@ -9,6 +9,6 @@ case class DocumentResponse(meta: Meta, objects: List[Document])
 object DocumentResponseProtocol extends DefaultJsonProtocol {
   implicit val metaFormat = jsonFormat(Meta, "limit", "next", "offset", "previous", "total_count")
   implicit val partyInfoFormat = jsonFormat(PartyInfo, "id", "name", "orgNo", "vatNo")
-  implicit val userFormat = jsonFormat(Document, "id", "name", "docType", "date", "partyInfo")
+  implicit val documentFormat = jsonFormat(Document, "id", "name", "docType", "date", "partyInfo")
   implicit val userResponseFormat = jsonFormat(DocumentResponse, "meta", "objects")
 }

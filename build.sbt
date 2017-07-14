@@ -9,14 +9,16 @@ scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:postf
 libraryDependencies ++= {
   val akkaVersion       = "2.3.15"
   val sprayVersion      = "1.3.2"
+  val cassandraVersion  = "2.1.9"
 
   Seq(
-    "commons-io"        % "commons-io"      % "2.5",
-    "io.spray"          %% "spray-can"      % sprayVersion,
-    "io.spray"          %% "spray-routing"  % sprayVersion,
-    "io.spray"          %% "spray-client"   % sprayVersion,
-    "io.spray"          %% "spray-json"     % sprayVersion,
-    "com.typesafe.akka" %% "akka-testkit"   % akkaVersion     % "test"
+    "commons-io"              % "commons-io"                % "2.5",
+    "com.datastax.cassandra"  % "cassandra-driver-core"     % cassandraVersion,
+    "io.spray"                %% "spray-can"                % sprayVersion,
+    "io.spray"                %% "spray-routing"            % sprayVersion,
+    "io.spray"                %% "spray-client"             % sprayVersion,
+    "io.spray"                %% "spray-json"               % sprayVersion,
+    "com.typesafe.akka"       %% "akka-testkit"             % akkaVersion           % "test"
   )
 }
 
