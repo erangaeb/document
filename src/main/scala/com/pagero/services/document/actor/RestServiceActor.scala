@@ -2,7 +2,7 @@ package com.pagero.services.document.actor
 
 import akka.actor.{Actor, Props}
 import akka.event.slf4j.SLF4JLogging
-import com.pagero.services.document.actor.RestRequestHandlerActor.{Get, Post}
+import com.pagero.services.document.actor.RestRequestHandlerActor.{Criteria, Get, Post}
 import spray.routing.HttpService
 
 object RestServiceActor {
@@ -24,7 +24,7 @@ trait RestService extends HttpService with SLF4JLogging {
         get {
           parameters("name" ?, "docType" ?, "from" ?, "to" ?) { (name, docType, from, to) => requestContext =>
             log.info(s"GET documents")
-            actorRefFactory.actorOf(RestRequestHandlerActor.props(requestContext)) ! Get(None, name, docType, from, to)
+            actorRefFactory.actorOf(RestRequestHandlerActor.props(requestContext)) ! Get(Criteria(None, name, docType, from, to))
           }
         } ~
           post { requestContext =>
@@ -35,7 +35,7 @@ trait RestService extends HttpService with SLF4JLogging {
         path("documents" / IntNumber) { docId =>
           get { requestContext =>
             log.info(s"GET document $docId")
-            actorRefFactory.actorOf(RestRequestHandlerActor.props(requestContext)) ! Get(Option(docId), None, None, None, None)
+            actorRefFactory.actorOf(RestRequestHandlerActor.props(requestContext)) ! Get(Criteria(Option(docId), None, None, None, None))
           } ~
             put {
               complete(s"Haha document PUT $docId")
