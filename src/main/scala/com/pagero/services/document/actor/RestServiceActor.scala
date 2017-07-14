@@ -3,6 +3,8 @@ package com.pagero.services.document.actor
 import akka.actor.{Actor, Props}
 import akka.event.slf4j.SLF4JLogging
 import com.pagero.services.document.actor.RestRequestHandlerActor.{Criteria, Get, Post}
+import com.pagero.services.document.protocol.Document
+import spray.httpx.SprayJsonSupport._
 import spray.routing.HttpService
 
 object RestServiceActor {
@@ -28,8 +30,11 @@ trait RestService extends HttpService with SLF4JLogging {
           }
         } ~
           post { requestContext =>
-            log.info("POST document")
-            actorRefFactory.actorOf(RestRequestHandlerActor.props(requestContext)) ! Post("post")
+            import com.pagero.services.document.protocol.DocumentProtocol._
+            entity(as[Document]) { document => requestContext =>
+              log.info("POST document")
+              actorRefFactory.actorOf(RestRequestHandlerActor.props(requestContext)) ! Post(document)
+            }
           }
       } ~
         path("documents" / IntNumber) { docId =>

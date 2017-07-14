@@ -12,9 +12,9 @@ object RestRequestHandlerActor {
 
   case class Get(criteria: Criteria)
 
-  case class Post(doc: String)
+  case class Post(document: Document)
 
-  case class Put(id: Int, doc: String)
+  case class Put(id: Int, document: Document)
 
   def props(requestContext: RequestContext) = Props(classOf[RestRequestHandlerActor], requestContext)
 
@@ -26,7 +26,7 @@ class RestRequestHandlerActor(requestContext: RequestContext) extends Actor with
 
   override def receive = {
     case Get(Criteria(None, name, docType, from, to)) =>
-      import com.pagero.services.document.protocol.DocumentProtocol._
+      import com.pagero.services.document.protocol.DocumentResponseProtocol._
 
       // search docs
       // all docs
