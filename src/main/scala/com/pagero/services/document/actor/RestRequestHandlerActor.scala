@@ -2,7 +2,9 @@ package com.pagero.services.document.actor
 
 import akka.actor.{Actor, Props}
 import akka.event.slf4j.SLF4JLogging
-import com.pagero.services.document.protocol.{Document, DocumentResponse, Meta, PartyInfo}
+import com.pagero.services.document.comp.{CassandraClusterComp, DocumentDbCompImpl}
+import com.pagero.services.document.protocol.{Document, DocumentResponse, Meta}
+import spray.http.StatusCodes
 import spray.httpx.SprayJsonSupport._
 import spray.routing.RequestContext
 
@@ -20,7 +22,7 @@ object RestRequestHandlerActor {
 
 }
 
-class RestRequestHandlerActor(requestContext: RequestContext) extends Actor with SLF4JLogging {
+class RestRequestHandlerActor(requestContext: RequestContext) extends Actor with DocumentDbCompImpl with CassandraClusterComp with SLF4JLogging {
 
   import RestRequestHandlerActor._
 
@@ -28,44 +30,45 @@ class RestRequestHandlerActor(requestContext: RequestContext) extends Actor with
     case Get(Criteria(None, name, docType, from, to)) =>
       import com.pagero.services.document.protocol.DocumentResponseProtocol._
 
-      // search docs
-      // all docs
-      log.info(s"GET document $name $docType $from $to")
-      requestContext.complete(get(Criteria(None, name, docType, from, to)))
+      log.info(s"GET documents $name $docType $from $to")
+
+      // search docs and create response
+      val docs = documentDb.getDocuments(Criteria(None, name, docType, from, to))
+      val meta = Meta(10, None, 0, None, 25)
+
+      val resp = DocumentResponse(meta, docs)
+      requestContext.complete(resp)
 
       context.stop(self)
     case Get(Criteria(Some(id), None, None, None, None)) =>
-      // get specific doc
+      import com.pagero.services.document.protocol.DocumentProtocol._
+
       log.info(s"GET document $id")
-      requestContext.complete("GET doc HAHA")
+
+      // find specific doc
+      val doc = documentDb.getDocument(id)
+      doc match {
+        case Some(d) =>
+          // found doc
+          requestContext.complete(d)
+        case None =>
+          // 404
+          requestContext.complete(StatusCodes.NotFound -> "404")
+      }
 
       context.stop(self)
     case Post(doc) =>
       // create doc
       log.info(s"POST document")
-      requestContext.complete("POST doc HAHA")
+      requestContext.complete("POST doc")
 
       context.stop(self)
     case Put(id, doc) =>
       // update doc
       log.info(s"PUT document $id")
-      requestContext.complete("PUT doc HAHA")
+      requestContext.complete("PUT doc")
 
       context.stop(self)
   }
 
-  def get(criteria: Criteria) = {
-    val meta = Meta(10, None, 0, None, 25)
-    val doc1 = Document(Option(3), "telia", "INVOICE", "2017/08/13", PartyInfo(Option(2), "eranga", "688812", "231122"))
-    val doc2 = Document(Option(4), "conviq", "INVOICE", "2017/08/24", PartyInfo(Option(3), "badara", "688812", "231122"))
-    DocumentResponse(meta, List(doc1, doc2))
-  }
-
-  def post() = {
-
-  }
-
-  def put() = {
-
-  }
 }

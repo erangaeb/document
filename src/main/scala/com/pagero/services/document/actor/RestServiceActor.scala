@@ -25,21 +25,18 @@ trait RestService extends HttpService with SLF4JLogging {
       path("documents") {
         get {
           parameters("name" ?, "docType" ?, "from" ?, "to" ?) { (name, docType, from, to) => requestContext =>
-            log.info(s"GET documents")
             actorRefFactory.actorOf(RestRequestHandlerActor.props(requestContext)) ! Get(Criteria(None, name, docType, from, to))
           }
         } ~
           post { requestContext =>
             import com.pagero.services.document.protocol.DocumentProtocol._
             entity(as[Document]) { document => requestContext =>
-              log.info("POST document")
               actorRefFactory.actorOf(RestRequestHandlerActor.props(requestContext)) ! Post(document)
             }
           }
       } ~
         path("documents" / IntNumber) { docId =>
           get { requestContext =>
-            log.info(s"GET document $docId")
             actorRefFactory.actorOf(RestRequestHandlerActor.props(requestContext)) ! Get(Criteria(Option(docId), None, None, None, None))
           } ~
             put {
