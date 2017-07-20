@@ -10,7 +10,7 @@ import spray.routing.RequestContext
 
 object RestRequestHandlerActor {
 
-  case class Criteria(id: Option[Int], name: Option[String], docType: Option[String], from: Option[String], to: Option[String])
+  case class Criteria(id: Option[Int], name: Option[String], docType: Option[String], partyName: Option[String], orgNo: Option[String])
 
   case class Get(criteria: Criteria)
 
@@ -27,13 +27,13 @@ class RestRequestHandlerActor(requestContext: RequestContext) extends Actor with
   import RestRequestHandlerActor._
 
   override def receive = {
-    case Get(Criteria(None, name, docType, from, to)) =>
+    case Get(Criteria(None, name, docType, partyName, orgNo)) =>
       import com.pagero.services.document.protocol.DocumentResponseProtocol._
 
-      log.info(s"GET documents $name $docType $from $to")
+      log.info(s"GET documents $name $docType $partyName $orgNo")
 
       // search docs and create response
-      val docs = documentDb.getDocuments(Criteria(None, name, docType, from, to))
+      val docs = documentDb.getDocuments(Criteria(None, name, docType, partyName, orgNo))
       val meta = Meta(10, None, 0, None, 25)
 
       val resp = DocumentResponse(meta, docs)
@@ -60,7 +60,9 @@ class RestRequestHandlerActor(requestContext: RequestContext) extends Actor with
     case Post(doc) =>
       // create doc
       log.info(s"POST document")
-      requestContext.complete("POST doc")
+
+      documentDb.createDocument(doc)
+      requestContext.complete(StatusCodes.Created -> "created")
 
       context.stop(self)
     case Put(id, doc) =>

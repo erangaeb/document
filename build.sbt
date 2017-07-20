@@ -9,7 +9,7 @@ scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:postf
 libraryDependencies ++= {
   val akkaVersion       = "2.3.15"
   val sprayVersion      = "1.3.2"
-  val cassandraVersion  = "2.1.9"
+  val cassandraVersion  = "3.1.1"
 
   Seq(
     "commons-io"              % "commons-io"                % "2.5",
