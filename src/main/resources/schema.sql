@@ -1,7 +1,14 @@
+-- keep ids
+--  1. org_no
+--  2. vat_no
+--  3. ovt_no
+--  4. iban_no
+--  5. unit_no
+--  6. department
 CREATE TYPE party_id (
     name TEXT,
     value TEXT
-)
+);
 
 CREATE TYPE address (
     country TEXT,
@@ -11,7 +18,7 @@ CREATE TYPE address (
     reference TEXT,
     street TEXT,
     town TEXT
-)
+);
 
 CREATE TYPE attachment (
     storage_id TEXT,
@@ -27,26 +34,6 @@ CREATE TYPE attachment (
     presentation BOOLEAN,
     overridden BOOLEAN
 );
-
-CREATE TABLE documents (
-    auth_company_id TEXT,
-    internal_interchange_id TEXT,
-    document_identifier TEXT,
-    sender_ids SET<frozen <party_id>>,
-
-    PRIMARY KEY(auth_company_id, internal_interchange_id)
-)
-
-INSERT INTO documents (auth_company_id, internal_interchange_id, document_identifier, sender_ids)
-VALUES (
-            '34332',
-            '45444444',
-            'INVOICE',
-            {
-                {name: 'orgNo', value: '5444'},
-                {name: 'vatNo', value: '89999'}
-            }
-        )
 
 CREATE TABLE documents (
     auth_company_id TEXT,
@@ -78,55 +65,31 @@ CREATE TABLE documents (
     sender_erp_id TEXT,
     sender_name TEXT,
     sender_gs1_prefix_id TEXT,
-    sender_org_no TEXT,
-    sender_vat_no TEXT,
-    sender_ovt_no TEXT,
-    sender_iban_no TEXT,
-    sender_unit_no TEXT,
-    sender_department TEXT,
-    sender_address frozen <address>,
     sender_ids SET<frozen <party_id>>,
+    sender_address frozen <address>,
 
     receiver_intermediator_id TEXT,
     receiving_service_provider_id TEXT,
     receiver_erp_id TEXT,
     receiver_name TEXT,
     receiver_gs1_prefix_id TEXT,
-    receiver_org_no TEXT,
-    receiver_vat_no TEXT,
-    receiver_ovt_no TEXT,
-    receiver_iban_no TEXT,
-    receiver_unit_no TEXT,
-    receiver_department TEXT,
-    receiver_address frozen <address>,
     receiver_ids SET<frozen <party_id>>,
+    receiver_address frozen <address>,
 
     seller_erp_id TEXT,
     seller_name TEXT,
     seller_gs1_prefix_id TEXT,
-    seller_org_no TEXT,
-    seller_vat_no TEXT,
-    seller_ovt_no TEXT,
-    seller_iban_no TEXT,
-    seller_unit_no TEXT,
-    seller_department TEXT,
-    seller_address frozen <address>,
     seller_ids SET<frozen <party_id>>,
+    seller_address frozen <address>,
 
     buyer_erp_id TEXT,
     buyer_name TEXT,
     buyer_gs1_prefix_id TEXT,
-    buyer_org_no TEXT,
-    buyer_vat_no TEXT,
-    buyer_ovt_no TEXT,
-    buyer_iban_no TEXT,
-    buyer_unit_no TEXT,
-    buyer_department TEXT,
+    buyer_ids SET<frozen <party_id>>,
     buyer_email TEXT,
     buyer_contact TEXT,
     buyer_phone_no TEXT,
     buyer_address frozen <address>,
-    buyer_ids SET<frozen <party_id>>,
 
     attachments SET<frozen <attachment>>,
 
