@@ -1,3 +1,53 @@
+CREATE TYPE party_id (
+    name TEXT,
+    value TEXT
+)
+
+CREATE TYPE address (
+    country TEXT,
+    country_code TEXT,
+    post_code TEXT,
+    province TEXT,
+    reference TEXT,
+    street TEXT,
+    town TEXT
+)
+
+CREATE TYPE attachment (
+    storage_id TEXT,
+    name TEXT,
+    created_date DATE,
+    doc_hash TEXT,
+    hash_algorithm TEXT,
+    type TEXT,
+    mime_type TEXT,
+    primary_presentation BOOLEAN,
+    legal_document BOOLEAN,
+    distributed BOOLEAN,
+    presentation BOOLEAN,
+    overridden BOOLEAN
+);
+
+CREATE TABLE documents (
+    auth_company_id TEXT,
+    internal_interchange_id TEXT,
+    document_identifier TEXT,
+    sender_ids SET<frozen <party_id>>,
+
+    PRIMARY KEY(auth_company_id, internal_interchange_id)
+)
+
+INSERT INTO documents (auth_company_id, internal_interchange_id, document_identifier, sender_ids)
+VALUES (
+            '34332',
+            '45444444',
+            'INVOICE',
+            {
+                {name: 'orgNo', value: '5444'},
+                {name: 'vatNo', value: '89999'}
+            }
+        )
+
 CREATE TABLE documents (
     auth_company_id TEXT,
     internal_interchange_id TEXT,
@@ -34,6 +84,8 @@ CREATE TABLE documents (
     sender_iban_no TEXT,
     sender_unit_no TEXT,
     sender_department TEXT,
+    sender_address frozen <address>,
+    sender_ids SET<frozen <party_id>>,
 
     receiver_intermediator_id TEXT,
     receiving_service_provider_id TEXT,
@@ -46,6 +98,8 @@ CREATE TABLE documents (
     receiver_iban_no TEXT,
     receiver_unit_no TEXT,
     receiver_department TEXT,
+    receiver_address frozen <address>,
+    receiver_ids SET<frozen <party_id>>,
 
     seller_erp_id TEXT,
     seller_name TEXT,
@@ -56,6 +110,8 @@ CREATE TABLE documents (
     seller_iban_no TEXT,
     seller_unit_no TEXT,
     seller_department TEXT,
+    seller_address frozen <address>,
+    seller_ids SET<frozen <party_id>>,
 
     buyer_erp_id TEXT,
     buyer_name TEXT,
@@ -67,19 +123,31 @@ CREATE TABLE documents (
     buyer_unit_no TEXT,
     buyer_department TEXT,
     buyer_email TEXT,
-    buyer_address TEXT,
     buyer_contact TEXT,
-    buyer_country_code TEXT,
     buyer_phone_no TEXT,
+    buyer_address frozen <address>,
+    buyer_ids SET<frozen <party_id>>,
+
+    attachments SET<frozen <attachment>>,
 
     PRIMARY KEY(auth_company_id, internal_interchange_id)
-)
+);
 
 CREATE TABLE attachments (
     internal_interchange_id TEXT,
     storage_id TEXT,
+    name TEXT,
+    created_date DATE,
     doc_hash TEXT,
     hash_algorithm TEXT,
+    type TEXT,
+    mime_type TEXT,
+    primary_presentation BOOLEAN,
+    legal_document BOOLEAN,
+    distributed BOOLEAN,
+    presentation BOOLEAN,
+    overridden BOOLEAN
 
     PRIMARY KEY(internal_interchange_id, storage_id)
-)
+);
+
