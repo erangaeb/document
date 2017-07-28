@@ -2,6 +2,8 @@ package com.pagero.services.document.util
 
 import com.pagero.services.document.actor.RestRequestHandlerActor.Criteria
 
+import scala.annotation.tailrec
+
 object CqlBuilder {
   def buildSearchQuery(criteria: Criteria) = {
     s"SELECT * FROM documents WHERE expr(documents_index, ${buildCriteriaFilter(criteria)});"
@@ -9,6 +11,8 @@ object CqlBuilder {
 
   def buildCriteriaFilter(criteria: Criteria) = {
     var f = "'{filter: ["
+    
+    @tailrec
     def build(l: List[(String, Any)]): String = {
       l match {
         case Nil =>
