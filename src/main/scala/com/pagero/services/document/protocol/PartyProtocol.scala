@@ -11,11 +11,11 @@ case class Address(country: String, countryCode: String, postCode: String, provi
 //  6. department
 case class PartyId(name: String, value: String)
 
-case class SenderParty(erpId: String, name: String, partyIds: List[PartyId], address: Address)
+case class SenderParty(erpId: String, name: String, ids: List[PartyId], address: Address)
 
-case class ReceiverParty(erpId: String, name: String, partyIds: List[PartyId], address: Address)
+case class ReceiverParty(erpId: String, name: String, ids: List[PartyId], address: Address)
 
-case class SellerParty(erpId: String, name: String, partyIds: List[PartyId], address: Address)
+case class SellerParty(erpId: String, name: String, ids: List[PartyId], address: Address)
 
-case class BuyerParty(erpId: String, name: String, partyIds: List[PartyId], address: Address)
+case class BuyerParty(erpId: String, name: String, ids: List[PartyId], address: Address)
 

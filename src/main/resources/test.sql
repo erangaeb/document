@@ -27,6 +27,7 @@ CREATE TABLE documents (
     document_identifier TEXT,
     sender_ids SET<frozen <party_id>>,
     sender_address frozen <address>,
+    attachments SET<frozen <attachment>>,
 
     PRIMARY KEY(auth_company_id, internal_interchange_id)
 )
@@ -37,7 +38,8 @@ INSERT INTO documents
         internal_interchange_id,
         document_identifier,
         sender_ids,
-        sender_address
+        sender_address,
+        attachments
     )
 VALUES
     (
@@ -52,5 +54,9 @@ VALUES
             country: 'sweden',
             country_code: 'SE',
             town: 'malmo'
+        },
+        {
+            {storage_id: '9000001', name: 'primary-te'},
+            {storage_id: '7000001', name: 'tel-att'}
         }
     )

@@ -86,10 +86,10 @@ CREATE TABLE documents (
     buyer_name TEXT,
     buyer_gs1_prefix_id TEXT,
     buyer_ids SET<frozen <party_id>>,
+    buyer_address frozen <address>,
     buyer_email TEXT,
     buyer_contact TEXT,
     buyer_phone_no TEXT,
-    buyer_address frozen <address>,
 
     attachments SET<frozen <attachment>>,
 
