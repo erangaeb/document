@@ -25,8 +25,16 @@ CREATE TABLE documents (
     auth_company_id TEXT,
     internal_interchange_id TEXT,
     document_identifier TEXT,
+    document_type TEXT,
+    distribution TEXT,
+    direction TEXT,
+    send_type TEXT,
+    sender_erp_id TEXT,
     sender_ids SET<frozen <party_id>>,
     sender_address frozen <address>,
+    receiver_erp_id TEXT,
+    receiver_ids SET<frozen <party_id>>,
+    receiver_address frozen <address>,
     attachments SET<frozen <attachment>>,
 
     PRIMARY KEY(auth_company_id, internal_interchange_id)
